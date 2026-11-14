@@ -1,0 +1,1946 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TIME TRAVEL ADVENTURE - Simple Past Tense | SMPN 2 Palas</title>
+<style>
+  :root {
+    --navy: #0B132B;
+    --navy-light: #1C2541;
+    --electric: #3A86FF;
+    --purple: #7209B7;
+    --purple-light: #9D4EDD;
+    --gold: #FFB703;
+    --gold-dark: #FB8500;
+    --success: #06D6A0;
+    --danger: #EF476F;
+    --light: #F8F9FA;
+    --text-muted: #CBD5E1;
+    --glass: rgba(28, 37, 65, 0.85);
+    --border-glow: rgba(58, 134, 255, 0.4);
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  }
+
+  body {
+    background: radial-gradient(circle at top right, #240046, var(--navy) 60%);
+    color: var(--light);
+    min-height: 100vh;
+    overflow-x: hidden;
+    line-height: 1.6;
+  }
+
+  /* Animated Starfield Background */
+  .stars {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none;
+    background-image: 
+      radial-gradient(2px 2px at 20px 30px, #ffffff, rgba(0,0,0,0)),
+      radial-gradient(2px 2px at 40px 70px, var(--gold), rgba(0,0,0,0)),
+      radial-gradient(2px 2px at 90px 40px, var(--electric), rgba(0,0,0,0)),
+      radial-gradient(2px 2px at 160px 120px, #ffffff, rgba(0,0,0,0));
+    background-repeat: repeat;
+    background-size: 250px 250px;
+    opacity: 0.35;
+    z-index: 0;
+  }
+
+  .app-container {
+    position: relative;
+    z-index: 1;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 15px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Top Bar */
+  .top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--glass);
+    backdrop-filter: blur(10px);
+    padding: 12px 20px;
+    border-radius: 16px;
+    border: 1px solid var(--border-glow);
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: var(--gold);
+    letter-spacing: 0.5px;
+  }
+
+  .hud-stats {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+  }
+
+  .stat-pill {
+    background: rgba(11, 19, 43, 0.8);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .btn-icon {
+    background: var(--navy-light);
+    color: var(--light);
+    border: 1px solid var(--border-glow);
+    padding: 8px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+
+  .btn-icon:hover {
+    background: var(--electric);
+    transform: translateY(-2px);
+  }
+
+  /* Screens */
+  .screen {
+    display: none;
+    animation: fadeSlide 0.4s ease forwards;
+    flex: 1;
+  }
+
+  .screen.active {
+    display: block;
+  }
+
+  @keyframes fadeSlide {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Buttons */
+  .btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.25s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-decoration: none;
+  }
+
+  .btn-gold {
+    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+    color: var(--navy);
+    box-shadow: 0 4px 15px rgba(255, 183, 3, 0.35);
+  }
+
+  .btn-gold:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 6px 20px rgba(255, 183, 3, 0.55);
+  }
+
+  .btn-electric {
+    background: linear-gradient(135deg, var(--electric), var(--purple));
+    color: white;
+    box-shadow: 0 4px 15px rgba(58, 134, 255, 0.35);
+  }
+
+  .btn-electric:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(58, 134, 255, 0.55);
+  }
+
+  .btn-outline {
+    background: transparent;
+    border: 2px solid var(--electric);
+    color: var(--light);
+  }
+
+  .btn-outline:hover {
+    background: rgba(58, 134, 255, 0.2);
+  }
+
+  .btn-success {
+    background: var(--success);
+    color: var(--navy);
+  }
+
+  .btn-danger {
+    background: var(--danger);
+    color: white;
+  }
+
+  /* Cards & Panels */
+  .panel {
+    background: var(--glass);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border-glow);
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    margin-bottom: 20px;
+  }
+
+  /* Welcome Screen */
+  .welcome-hero {
+    text-align: center;
+    padding: 40px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .portal-ring {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: conic-gradient(from 0deg, var(--electric), var(--purple), var(--gold), var(--electric));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 25px;
+    animation: spinPortal 8s linear infinite;
+    box-shadow: 0 0 40px rgba(114, 9, 183, 0.7);
+  }
+
+  .portal-inner {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    background: var(--navy);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
+    animation: spinReverse 8s linear infinite;
+  }
+
+  @keyframes spinPortal { 100% { transform: rotate(360deg); } }
+  @keyframes spinReverse { 100% { transform: rotate(-360deg); } }
+
+  .hero-title {
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 900;
+    background: linear-gradient(to right, #fff, var(--gold), var(--electric));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 10px;
+  }
+
+  .hero-subtitle {
+    font-size: 1.2rem;
+    color: var(--gold);
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .hero-tagline {
+    color: var(--text-muted);
+    letter-spacing: 2px;
+    font-size: 0.9rem;
+    margin-bottom: 30px;
+    text-transform: uppercase;
+  }
+
+  .welcome-actions {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  /* Identity Form */
+  .identity-box {
+    max-width: 480px;
+    margin: 30px auto;
+    text-align: center;
+  }
+
+  .form-group {
+    text-align: left;
+    margin-bottom: 18px;
+  }
+
+  .form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: var(--gold);
+  }
+
+  .form-control {
+    width: 100%;
+    padding: 12px 15px;
+    border-radius: 10px;
+    border: 1px solid var(--border-glow);
+    background: rgba(11, 19, 43, 0.9);
+    color: white;
+    font-size: 1rem;
+  }
+
+  .form-control:focus {
+    outline: none;
+    border-color: var(--gold);
+  }
+
+  /* Dashboard */
+  .guide-banner {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: linear-gradient(90deg, rgba(58, 134, 255, 0.2), rgba(114, 9, 183, 0.2));
+    padding: 15px 20px;
+    border-radius: 16px;
+    border-left: 5px solid var(--gold);
+    margin-bottom: 20px;
+  }
+
+  .avatar-guide {
+    font-size: 2.8rem;
+    background: var(--navy);
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--gold);
+    flex-shrink: 0;
+  }
+
+  .progress-wrapper {
+    margin-top: 10px;
+  }
+
+  .progress-bar-bg {
+    width: 100%;
+    height: 12px;
+    background: rgba(11, 19, 43, 0.9);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 5px;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--electric), var(--success));
+    width: 0%;
+    transition: width 0.5s ease;
+  }
+
+  .mission-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+    gap: 18px;
+  }
+
+  .mission-card {
+    background: linear-gradient(145deg, var(--navy-light), var(--navy));
+    border: 1px solid var(--border-glow);
+    border-radius: 18px;
+    padding: 22px;
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .mission-card:hover {
+    transform: translateY(-6px);
+    border-color: var(--gold);
+    box-shadow: 0 10px 25px rgba(255, 183, 3, 0.2);
+  }
+
+  .mission-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: rgba(58, 134, 255, 0.25);
+    color: var(--gold);
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+
+  .mission-card.completed .mission-badge {
+    background: var(--success);
+    color: var(--navy);
+  }
+
+  .mission-icon {
+    font-size: 2.5rem;
+    margin-bottom: 12px;
+  }
+
+  .mission-card h3 {
+    color: var(--gold);
+    margin-bottom: 6px;
+    font-size: 1.2rem;
+  }
+
+  .mission-card p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+  }
+
+  /* Section Header */
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  /* Tabs */
+  .tabs {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .tab-btn {
+    background: var(--navy);
+    color: var(--text-muted);
+    border: 1px solid var(--border-glow);
+    padding: 10px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+
+  .tab-btn.active {
+    background: var(--electric);
+    color: white;
+    border-color: var(--electric);
+  }
+
+  .tab-content {
+    display: none;
+  }
+
+  .tab-content.active {
+    display: block;
+    animation: fadeSlide 0.3s ease;
+  }
+
+  /* Tables & Formula Boxes */
+  .formula-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+    margin: 15px 0;
+  }
+
+  .formula-card {
+    background: rgba(11, 19, 43, 0.85);
+    border-left: 4px solid var(--electric);
+    padding: 15px;
+    border-radius: 10px;
+  }
+
+  .formula-card.neg { border-color: var(--danger); }
+  .formula-card.int { border-color: var(--gold); }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    background: rgba(11, 19, 43, 0.7);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  th, td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  th {
+    background: var(--purple);
+    color: white;
+  }
+
+  /* Simulation Styles */
+  .sim-box {
+    background: rgba(11, 19, 43, 0.85);
+    border: 1px solid var(--border-glow);
+    border-radius: 15px;
+    padding: 20px;
+    margin-top: 15px;
+  }
+
+  .option-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    margin: 15px 0;
+  }
+
+  .opt-btn {
+    background: var(--navy-light);
+    color: white;
+    border: 2px solid var(--border-glow);
+    padding: 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.2s;
+  }
+
+  .opt-btn:hover {
+    border-color: var(--gold);
+    background: rgba(58, 134, 255, 0.2);
+  }
+
+  .word-bank, .answer-slot {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    min-height: 52px;
+    padding: 12px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px dashed var(--electric);
+    margin: 12px 0;
+    align-items: center;
+  }
+
+  .word-chip {
+    background: var(--electric);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 700;
+    user-select: none;
+    transition: transform 0.15s;
+  }
+
+  .word-chip:hover {
+    transform: scale(1.05);
+  }
+
+  .feedback-banner {
+    padding: 12px 16px;
+    border-radius: 10px;
+    margin-top: 15px;
+    font-weight: 600;
+    display: none;
+  }
+
+  .feedback-banner.ok {
+    display: block;
+    background: rgba(6, 214, 160, 0.2);
+    border: 1px solid var(--success);
+    color: var(--success);
+  }
+
+  .feedback-banner.err {
+    display: block;
+    background: rgba(239, 71, 111, 0.2);
+    border: 1px solid var(--danger);
+    color: #ff8fa3;
+  }
+
+  /* Worksheet (LKPD) */
+  .story-box {
+    background: linear-gradient(135deg, #1e293b, #0f172a);
+    border: 1px solid var(--gold);
+    padding: 20px;
+    border-radius: 14px;
+    margin-bottom: 20px;
+    font-size: 1.05rem;
+  }
+
+  .lkpd-item {
+    background: rgba(11, 19, 43, 0.7);
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 15px;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+
+  textarea.form-control {
+    min-height: 90px;
+    resize: vertical;
+  }
+
+  /* Evaluation */
+  .quiz-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .q-type-badge {
+    background: var(--purple);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+  }
+
+  .quiz-opt {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 14px 18px;
+    margin-bottom: 10px;
+    background: var(--navy);
+    border: 2px solid var(--border-glow);
+    border-radius: 12px;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .quiz-opt:hover {
+    border-color: var(--electric);
+  }
+
+  .quiz-opt.selected {
+    background: rgba(58, 134, 255, 0.3);
+    border-color: var(--gold);
+  }
+
+  /* Achievement & Certificate */
+  .certificate-card {
+    background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+    border: 4px double var(--gold);
+    border-radius: 20px;
+    padding: 30px;
+    text-align: center;
+    position: relative;
+    margin: 20px 0;
+  }
+
+  .badge-display {
+    font-size: 4.5rem;
+    margin: 10px 0;
+  }
+
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+    margin: 20px 0;
+  }
+
+  .stat-box {
+    background: rgba(255, 255, 255, 0.06);
+    padding: 15px;
+    border-radius: 12px;
+  }
+
+  .stat-box h4 {
+    font-size: 1.6rem;
+    color: var(--gold);
+  }
+
+  /* Developer Profile */
+  .dev-grid {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 25px;
+    align-items: center;
+  }
+
+  .dev-avatar {
+    width: 200px;
+    height: 200px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, var(--electric), var(--purple));
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 5rem;
+    border: 3px solid var(--gold);
+    margin: 0 auto;
+  }
+
+  @media (max-width: 700px) {
+    .dev-grid {
+      grid-template-columns: 1fr;
+      text-align: center;
+    }
+  }
+
+  /* Modal */
+  .modal-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 20px;
+  }
+
+  .modal-overlay.open {
+    display: flex;
+  }
+
+  .modal-box {
+    background: var(--navy-light);
+    border: 2px solid var(--gold);
+    border-radius: 20px;
+    max-width: 600px;
+    width: 100%;
+    padding: 25px;
+    max-height: 85vh;
+    overflow-y: auto;
+  }
+
+  /* Print Styles */
+  @media print {
+    body { background: white !important; color: black !important; }
+    .stars, .top-bar, .no-print { display: none !important; }
+    .panel, .certificate-card, .story-box, .lkpd-item {
+      background: white !important;
+      color: black !important;
+      border: 1px solid #333 !important;
+      box-shadow: none !important;
+    }
+    .stat-box h4 { color: black !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="stars"></div>
+
+<div class="app-container">
+  <!-- TOP HUD BAR -->
+  <header class="top-bar" id="topBar" style="display:none;">
+    <div class="brand">
+      <span>⏳</span> TIME TRAVEL ADVENTURE
+    </div>
+    <div class="hud-stats">
+      <div class="stat-pill">🧑‍🚀 <span id="hudName">Agent</span> (<span id="hudClass">IX</span>)</div>
+      <div class="stat-pill">⭐ <span id="hudStars">0</span> Bintang</div>
+      <div class="stat-pill">📊 Progres: <span id="hudProgress">0%</span></div>
+      <button class="btn-icon" onclick="toggleSound()" id="soundBtn" title="Suara Efek">🔊 SFX ON</button>
+      <button class="btn-icon" onclick="goScreen('dashboard')">🏠 Dashboard</button>
+    </div>
+  </header>
+
+  <!-- 1. WELCOME SCREEN -->
+  <section id="screen-welcome" class="screen active">
+    <div class="panel welcome-hero">
+      <div class="portal-ring">
+        <div class="portal-inner">⏳</div>
+      </div>
+      <div class="hero-subtitle">Media Pembelajaran Interaktif Bahasa Inggris Kelas IX</div>
+      <h1 class="hero-title">TIME TRAVEL ADVENTURE</h1>
+      <p style="font-size:1.3rem; font-weight:700; color:#fff; margin-bottom:5px;">Mastering Simple Past Tense</p>
+      <div class="hero-tagline">Learn • Explore • Practice • Play • Achieve</div>
+      
+      <div class="welcome-actions">
+        <button class="btn btn-gold" onclick="playClick(); goScreen('identity')">🚀 START ADVENTURE</button>
+        <button class="btn btn-electric" onclick="playClick(); openModal('modalHowTo')">📖 HOW TO PLAY</button>
+        <button class="btn btn-outline" onclick="playClick(); goScreen('developer')">👨‍🏫 DEVELOPER</button>
+        <button class="btn btn-outline" onclick="toggleSound()" id="welcomeSoundBtn">🔊 Suara: Aktif</button>
+      </div>
+      <p style="margin-top:30px; font-size:0.85rem; color:var(--text-muted);">
+        Dikembangkan oleh <strong>M. Herdiawan, M.Pd.</strong> • SMP Negeri 2 Palas
+      </p>
+    </div>
+  </section>
+
+  <!-- 2. INPUT STUDENT IDENTITY -->
+  <section id="screen-identity" class="screen">
+    <div class="panel identity-box">
+      <div style="font-size:3.5rem; margin-bottom:10px;">🧑‍🚀</div>
+      <h2 style="color:var(--gold); margin-bottom:8px;">Time Traveler Registration</h2>
+      <p style="color:var(--text-muted); margin-bottom:20px;">Masukkan identitasmu sebelum memasuki mesin waktu!</p>
+      
+      <div class="form-group">
+        <label for="inputStudentName">Nama Lengkap Siswa</label>
+        <input type="text" id="inputStudentName" class="form-control" placeholder="Contoh: Ahmad Fauzan">
+      </div>
+      <div class="form-group">
+        <label for="inputStudentClass">Kelas</label>
+        <select id="inputStudentClass" class="form-control">
+          <option value="IX A">Kelas IX A</option>
+          <option value="IX B">Kelas IX B</option>
+          <option value="IX C">Kelas IX C</option>
+          <option value="IX D">Kelas IX D</option>
+          <option value="IX E">Kelas IX E</option>
+        </select>
+      </div>
+      <button class="btn btn-gold" style="width:100%;" onclick="startMission()">⚡ MASUK KE MISSION CONTROL</button>
+    </div>
+  </section>
+
+  <!-- 3. MAIN DASHBOARD (MISSION CONTROL) -->
+  <section id="screen-dashboard" class="screen">
+    <div class="guide-banner">
+      <div class="avatar-guide">🤖</div>
+      <div style="flex:1;">
+        <h3 style="color:var(--gold);">Selamat datang, Penjelajah Waktu <span id="dashName">Siswa</span>!</h3>
+        <p style="font-size:0.9rem; color:var(--text-muted);">Selesaikan 5 misi utama untuk membuka portal waktu dan meraih gelar <strong>Past Tense Master</strong>.</p>
+        <div class="progress-wrapper">
+          <div style="display:flex; justify-content:space-between; font-size:0.8rem; font-weight:700;">
+            <span>Progres Petualangan Waktu</span>
+            <span id="dashProgressText">0% (0/5 Misi)</span>
+          </div>
+          <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="dashProgressBar"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mission-grid">
+      <div class="mission-card" id="card-m1" onclick="playClick(); goScreen('materials')">
+        <span class="mission-badge" id="badge-m1">MISSION 01</span>
+        <div class="mission-icon">📚</div>
+        <h3>Explore the Past</h3>
+        <p><strong>Learning Materials:</strong> Pelajari pengertian, fungsi, rumus (+, -, ?), regular/irregular verbs, dan time signals.</p>
+      </div>
+
+      <div class="mission-card" id="card-m2" onclick="playClick(); goScreen('simulation')">
+        <span class="mission-badge" id="badge-m2">MISSION 02</span>
+        <div class="mission-icon">⚙️</div>
+        <h3>Time Machine Simulation</h3>
+        <p><strong>Simulation Lab:</strong> Praktik langsung mengubah kata kerja, merakit kalimat, mesin waktu, & detektif kesalahan.</p>
+      </div>
+
+      <div class="mission-card" id="card-m3" onclick="playClick(); goScreen('worksheet')">
+        <span class="mission-badge" id="badge-m3">MISSION 03</span>
+        <div class="mission-icon">🕵️</div>
+        <h3>Detective Worksheet</h3>
+        <p><strong>Digital LKPD:</strong> Pecahkan kasus "The Mystery of Yesterday", berburu Verb 2, dan tulis cerita pengalamanmu.</p>
+      </div>
+
+      <div class="mission-card" id="card-m4" onclick="playClick(); goScreen('evaluation')">
+        <span class="mission-badge" id="badge-m4">MISSION 04</span>
+        <div class="mission-icon">🏆</div>
+        <h3>Final Challenge</h3>
+        <p><strong>Evaluation:</strong> Ujian akhir 25 soal interaktif (Pilihan Ganda, Benar-Salah, Isian, Susun Kalimat).</p>
+      </div>
+
+      <div class="mission-card" id="card-m5" onclick="playClick(); goScreen('achievement')">
+        <span class="mission-badge" id="badge-m5">MISSION 05</span>
+        <div class="mission-icon">🎖️</div>
+        <h3>Achievement Room</h3>
+        <p><strong>My Achievement:</strong> Lihat skor evaluasi, analisis jawaban, badge gelar, dan cetak sertifikat kelulusan.</p>
+      </div>
+
+      <div class="mission-card" onclick="playClick(); goScreen('developer')">
+        <span class="mission-badge">INFO</span>
+        <div class="mission-icon">👨‍🏫</div>
+        <h3>Developer Profile</h3>
+        <p><strong>Profil Pengembang:</strong> Informasi guru pengembang (M. Herdiawan, M.Pd.), tujuan media, dan referensi.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. MISSION 01: LEARNING MATERIALS -->
+  <section id="screen-materials" class="screen">
+    <div class="panel">
+      <div class="section-header">
+        <div>
+          <span style="color:var(--gold); font-weight:700; font-size:0.85rem;">MISSION 01 • EXPLORE THE PAST</span>
+          <h2>Learning Materials: Simple Past Tense</h2>
+        </div>
+        <button class="btn btn-outline" onclick="goScreen('dashboard')">⬅ Kembali</button>
+      </div>
+
+      <div class="tabs">
+        <button class="tab-btn active" onclick="openMatTab(0, this)">1. Definition & Function</button>
+        <button class="tab-btn" onclick="openMatTab(1, this)">2. Formula (Pola)</button>
+        <button class="tab-btn" onclick="openMatTab(2, this)">3. Regular & Irregular</button>
+        <button class="tab-btn" onclick="openMatTab(3, this)">4. Time Signals & Examples</button>
+        <button class="tab-btn" onclick="openMatTab(4, this)">5. Mini Practice</button>
+      </div>
+
+      <!-- Tab 0: Definition & Function -->
+      <div class="tab-content active" id="mat-tab-0">
+        <div class="formula-card" style="margin-bottom:15px;">
+          <h3 style="color:var(--gold); margin-bottom:8px;">📌 Definition (Pengertian)</h3>
+          <p><strong>Simple Past Tense</strong> adalah bentuk waktu (tense) yang digunakan untuk menyatakan suatu kegiatan, peristiwa, atau keadaan yang <strong>terjadi dan telah selesai pada masa lampau</strong> (di waktu tertentu sebelum sekarang).</p>
+        </div>
+        <div class="formula-card" style="border-color:var(--purple-light);">
+          <h3 style="color:var(--gold); margin-bottom:8px;">🎯 Function (Kegunaan)</h3>
+          <ul style="margin-left:20px; color:var(--text-muted);">
+            <li>Menceritakan kejadian yang sudah selesai di masa lalu (Contoh: <em>I visited Bali last year.</em>)</li>
+            <li>Menceritakan rangkaian peristiwa masa lalu dalam <strong>Recount Text</strong> atau <strong>Narrative Text</strong>.</li>
+            <li>Menyatakan kebiasaan di masa lampau yang sekarang sudah tidak dilakukan lagi.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Tab 1: Formula -->
+      <div class="tab-content" id="mat-tab-1">
+        <h3 style="color:var(--gold); margin-bottom:10px;">A. Kalimat Verbal (Menggunakan Kata Kerja / Verb)</h3>
+        <div class="formula-grid">
+          <div class="formula-card">
+            <h4 style="color:var(--success);">➕ Positive (+)</h4>
+            <p style="font-weight:700; margin:6px 0;">S + V2 + O / Complement</p>
+            <p style="font-size:0.9rem; color:var(--text-muted);">Contoh: <em>I <strong>visited</strong> my grandmother yesterday.</em></p>
+          </div>
+          <div class="formula-card neg">
+            <h4 style="color:var(--danger);">➖ Negative (-)</h4>
+            <p style="font-weight:700; margin:6px 0;">S + did not (didn't) + V1 + O</p>
+            <p style="font-size:0.9rem; color:var(--text-muted);">Contoh: <em>I <strong>did not visit</strong> my grandmother yesterday.</em></p>
+          </div>
+          <div class="formula-card int">
+            <h4 style="color:var(--gold);">❓ Interrogative (?)</h4>
+            <p style="font-weight:700; margin:6px 0;">Did + S + V1 + O?</p>
+            <p style="font-size:0.9rem; color:var(--text-muted);">Contoh: <em><strong>Did</strong> you <strong>visit</strong> your grandmother yesterday?</em></p>
+          </div>
+        </div>
+
+        <h3 style="color:var(--gold); margin:20px 0 10px;">B. Kalimat Nominal (Tanpa Kata Kerja / Menggunakan To Be: Was / Were)</h3>
+        <div class="formula-card" style="border-color:var(--gold);">
+          <p style="margin-bottom:8px;">⚠️ <strong>Catatan Penting:</strong> Untuk kalimat nominal (diikuti kata sifat/benda/tempat), gunakan <strong>was / were</strong>, BUKAN <em>did</em>!</p>
+          <ul style="margin-left:20px;">
+            <li><strong>Was</strong> digunakan untuk subjek: <em>I, He, She, It, Nama Tunggal</em>.</li>
+            <li><strong>Were</strong> digunakan untuk subjek: <em>You, We, They, Nama Jamak</em>.</li>
+            <li><strong>Positive:</strong> <em>She <strong>was</strong> happy.</em> / <em>They <strong>were</strong> at school.</em></li>
+            <li><strong>Negative:</strong> <em>She <strong>was not (wasn't)</strong> happy.</em></li>
+            <li><strong>Interrogative:</strong> <em><strong>Was</strong> she happy?</em></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Tab 2: Regular & Irregular -->
+      <div class="tab-content" id="mat-tab-2">
+        <p style="margin-bottom:10px;">Kata kerja bentuk kedua (<strong>V2</strong>) terbagi menjadi dua jenis:</p>
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap:15px; margin-bottom:15px;">
+          <div class="formula-card">
+            <h4 style="color:var(--gold);">Regular Verbs (Beraturan)</h4>
+            <p style="font-size:0.9rem;">V1 ditambahkan akhiran <strong>-ed</strong> atau <strong>-d</strong> (jika berakhiran -y setelah konsonan, berubah menjadi <strong>-ied</strong>).</p>
+          </div>
+          <div class="formula-card" style="border-color:var(--purple-light);">
+            <h4 style="color:var(--gold);">Irregular Verbs (Tidak Beraturan)</h4>
+            <p style="font-size:0.9rem;">Bentuk V2 berubah secara khusus dan tidak mengikuti aturan -ed.</p>
+          </div>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Verb 1 (Base)</th>
+              <th>Verb 2 (Past)</th>
+              <th>Jenis</th>
+              <th>Arti</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Play</td><td><strong>Played</strong></td><td>Regular</td><td>Bermain</td></tr>
+            <tr><td>Visit</td><td><strong>Visited</strong></td><td>Regular</td><td>Mengunjungi</td></tr>
+            <tr><td>Study</td><td><strong>Studied</strong></td><td>Regular</td><td>Belajar</td></tr>
+            <tr><td>Go</td><td><strong>Went</strong></td><td>Irregular</td><td>Pergi</td></tr>
+            <tr><td>Eat</td><td><strong>Ate</strong></td><td>Irregular</td><td>Makan</td></tr>
+            <tr><td>Buy</td><td><strong>Bought</strong></td><td>Irregular</td><td>Membeli</td></tr>
+            <tr><td>Write</td><td><strong>Wrote</strong></td><td>Irregular</td><td>Menulis</td></tr>
+            <tr><td>See</td><td><strong>Saw</strong></td><td>Irregular</td><td>Melihat</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Tab 3: Time Signals & Examples -->
+      <div class="tab-content" id="mat-tab-3">
+        <h3 style="color:var(--gold); margin-bottom:10px;">⏰ Time Signals (Penanda Waktu Masa Lampau)</h3>
+        <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:20px;">
+          <span class="stat-pill" style="border-color:var(--gold);">Yesterday (Kemarin)</span>
+          <span class="stat-pill" style="border-color:var(--gold);">Last night (Tadi malam)</span>
+          <span class="stat-pill" style="border-color:var(--gold);">Last week (Minggu lalu)</span>
+          <span class="stat-pill" style="border-color:var(--gold);">Two days ago (Dua hari lalu)</span>
+          <span class="stat-pill" style="border-color:var(--gold);">A year ago (Setahun lalu)</span>
+          <span class="stat-pill" style="border-color:var(--gold);">Last Sunday (Hari Minggu lalu)</span>
+        </div>
+
+        <h3 style="color:var(--gold); margin-bottom:10px;">💬 Examples in Context</h3>
+        <div class="formula-card">
+          <p>1. <em>We <strong>watched</strong> a great movie last night.</em> (Kami menonton film bagus tadi malam.)</p>
+          <p>2. <em>Rina <strong>did not buy</strong> a new bag two days ago.</em> (Rina tidak membeli tas baru dua hari lalu.)</p>
+          <p>3. <em><strong>Did</strong> they <strong>go</strong> to Lampung last holiday?</em> (Apakah mereka pergi ke Lampung liburan lalu?)</p>
+          <p>4. <em>He <strong>was</strong> very tired after the football match.</em> (Dia sangat lelah setelah pertandingan sepak bola.)</p>
+        </div>
+      </div>
+
+      <!-- Tab 4: Mini Practice -->
+      <div class="tab-content" id="mat-tab-4">
+        <h3 style="color:var(--gold); margin-bottom:10px;">⚡ Quick Check (Latihan Singkat)</h3>
+        <p style="margin-bottom:15px;">Uji pemahamanmu sebelum menyelesaikan Mission 01!</p>
+        
+        <div class="lkpd-item">
+          <p><strong>1.</strong> My mother _____ delicious fried rice yesterday morning.</p>
+          <div class="option-grid">
+            <button class="opt-btn" onclick="checkMiniPractice(1, false, this)">cook</button>
+            <button class="opt-btn" onclick="checkMiniPractice(1, true, this)">cooked</button>
+            <button class="opt-btn" onclick="checkMiniPractice(1, false, this)">cooking</button>
+          </div>
+          <div id="mp-fb-1" class="feedback-banner"></div>
+        </div>
+
+        <div class="lkpd-item">
+          <p><strong>2.</strong> They _____ not go to the museum last Sunday.</p>
+          <div class="option-grid">
+            <button class="opt-btn" onclick="checkMiniPractice(2, false, this)">do</button>
+            <button class="opt-btn" onclick="checkMiniPractice(2, false, this)">were</button>
+            <button class="opt-btn" onclick="checkMiniPractice(2, true, this)">did</button>
+          </div>
+          <div id="mp-fb-2" class="feedback-banner"></div>
+        </div>
+
+        <div style="text-align:right; margin-top:20px;">
+          <button class="btn btn-gold" onclick="completeMission(1); goScreen('dashboard')">✅ Selesaikan Mission 01 (+1 Bintang)</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. MISSION 02: SIMULATION LAB -->
+  <section id="screen-simulation" class="screen">
+    <div class="panel">
+      <div class="section-header">
+        <div>
+          <span style="color:var(--gold); font-weight:700; font-size:0.85rem;">MISSION 02 • TIME MACHINE SIMULATION</span>
+          <h2>Simulation Lab</h2>
+        </div>
+        <button class="btn btn-outline" onclick="goScreen('dashboard')">⬅ Kembali</button>
+      </div>
+
+      <div class="tabs">
+        <button class="tab-btn active" onclick="openSimTab(1, this)">Sim 1: Verb Transformer</button>
+        <button class="tab-btn" onclick="openSimTab(2, this)">Sim 2: Sentence Builder</button>
+        <button class="tab-btn" onclick="openSimTab(3, this)">Sim 3: Time Machine</button>
+        <button class="tab-btn" onclick="openSimTab(4, this)">Sim 4: Error Detective</button>
+      </div>
+
+      <!-- SIM 1: Verb Transformer -->
+      <div class="tab-content active" id="sim-tab-1">
+        <div class="sim-box">
+          <h3 style="color:var(--gold);">🔄 Simulasi 1 – Verb Transformer</h3>
+          <p style="color:var(--text-muted);">Ubah kata kerja dasar (Verb 1) berikut menjadi bentuk lampau (Verb 2) yang tepat!</p>
+          <div style="text-align:center; margin:25px 0;">
+            <span style="font-size:0.9rem; color:var(--electric);">Soal <span id="s1-num">1</span>/4</span>
+            <h2 style="font-size:2.5rem; color:white; margin:10px 0;"><span id="s1-v1">GO</span> ➔ <span style="color:var(--gold);">?</span></h2>
+          </div>
+          <div class="option-grid" id="s1-options"></div>
+          <div id="s1-feedback" class="feedback-banner"></div>
+          <div style="text-align:right; margin-top:15px;">
+            <button class="btn btn-electric" id="s1-next" style="display:none;" onclick="nextSim1()">Soal Berikutnya ➔</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SIM 2: Sentence Builder -->
+      <div class="tab-content" id="sim-tab-2">
+        <div class="sim-box">
+          <h3 style="color:var(--gold);">🧩 Simulasi 2 – Sentence Builder</h3>
+          <p style="color:var(--text-muted);">Klik kata-kata acak di bawah ini untuk menyusun kalimat Simple Past Tense yang benar! (<span id="s2-num">1</span>/3)</p>
+          
+          <p style="margin-top:15px; font-weight:600;">Susunan Kalimatmu:</p>
+          <div class="answer-slot" id="s2-answer"></div>
+
+          <p style="font-weight:600;">Bank Kata:</p>
+          <div class="word-bank" id="s2-bank"></div>
+
+          <div style="display:flex; gap:10px; margin-top:15px;">
+            <button class="btn btn-gold" onclick="checkSim2()">✔ Periksa Kalimat</button>
+            <button class="btn btn-outline" onclick="resetSim2()">🔄 Reset</button>
+            <button class="btn btn-electric" id="s2-next" style="display:none;" onclick="nextSim2()">Lanjut ➔</button>
+          </div>
+          <div id="s2-feedback" class="feedback-banner"></div>
+        </div>
+      </div>
+
+      <!-- SIM 3: Time Machine Challenge -->
+      <div class="tab-content" id="sim-tab-3">
+        <div class="sim-box">
+          <h3 style="color:var(--gold);">⏳ Simulasi 3 – Time Machine Challenge</h3>
+          <p style="color:var(--text-muted);">Aktifkan mesin waktu! Ubah kalimat masa kini (Simple Present) menjadi masa lampau (Simple Past). (<span id="s3-num">1</span>/3)</p>
+          
+          <div style="background:rgba(58,134,255,0.15); padding:15px; border-radius:12px; margin:15px 0; border-left:4px solid var(--electric);">
+            <span style="font-size:0.8rem; color:var(--gold); font-weight:700;">PRESENT TENSE (SEKARANG):</span>
+            <p style="font-size:1.2rem; font-weight:700;" id="s3-present">"I go to school every day."</p>
+          </div>
+
+          <p style="font-weight:600;">Pilih hasil transformasi ke PAST TENSE:</p>
+          <div id="s3-options" style="margin-top:10px;"></div>
+          <div id="s3-feedback" class="feedback-banner"></div>
+          <div style="text-align:right; margin-top:15px;">
+            <button class="btn btn-electric" id="s3-next" style="display:none;" onclick="nextSim3()">Berikutnya ➔</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SIM 4: Error Detective -->
+      <div class="tab-content" id="sim-tab-4">
+        <div class="sim-box">
+          <h3 style="color:var(--gold);">🔍 Simulasi 4 – Error Detective</h3>
+          <p style="color:var(--text-muted);">Temukan dan perbaiki kesalahan tata bahasa (grammar error) pada kalimat berikut! (<span id="s4-num">1</span>/3)</p>
+          
+          <div style="background:rgba(239,71,111,0.15); padding:15px; border-radius:12px; margin:15px 0; border-left:4px solid var(--danger);">
+            <span style="font-size:0.8rem; color:#ff8fa3; font-weight:700;">KALIMAT SALAH:</span>
+            <p style="font-size:1.2rem; font-weight:700;" id="s4-wrong">"She did not went to school yesterday."</p>
+          </div>
+
+          <p style="font-weight:600;">Pilih perbaikan kalimat yang benar:</p>
+          <div id="s4-options" style="margin-top:10px;"></div>
+          <div id="s4-feedback" class="feedback-banner"></div>
+          <div style="text-align:right; margin-top:15px;">
+            <button class="btn btn-electric" id="s4-next" style="display:none;" onclick="nextSim4()">Berikutnya ➔</button>
+          </div>
+        </div>
+      </div>
+
+      <div style="text-align:right; margin-top:20px; border-top:1px solid rgba(255,255,255,0.1); padding-top:15px;">
+        <button class="btn btn-gold" onclick="completeMission(2); goScreen('dashboard')">✅ Selesaikan Mission 02 (+1 Bintang)</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. MISSION 03: DIGITAL WORKSHEET (LKPD) -->
+  <section id="screen-worksheet" class="screen">
+    <div class="panel">
+      <div class="section-header">
+        <div>
+          <span style="color:var(--gold); font-weight:700; font-size:0.85rem;">MISSION 03 • DETECTIVE WORKSHEET</span>
+          <h2>LKPD Digital: The Mystery of Yesterday</h2>
+        </div>
+        <button class="btn btn-outline no-print" onclick="goScreen('dashboard')">⬅ Kembali</button>
+      </div>
+
+      <p style="margin-bottom:15px; color:var(--text-muted);">
+        <strong>Tujuan:</strong> Siswa mampu mengidentifikasi, menggunakan, dan menyusun kalimat Simple Past Tense berdasarkan sebuah cerita.
+      </p>
+
+      <!-- Activity 1: Reading -->
+      <div class="story-box">
+        <h3 style="color:var(--gold); margin-bottom:10px;">📖 Activity 1: Reading Activity</h3>
+        <h4 style="margin-bottom:8px; text-decoration:underline;">My Holiday Last Week</h4>
+        <p style="line-height:1.8;">
+          Last week, I <strong>visited</strong> my grandmother. I <strong>went</strong> to her house with my family. 
+          We <strong>cooked</strong> traditional food, <strong>played</strong> games, and <strong>watched</strong> television together. 
+          I <strong>was</strong> very happy because I <strong>spent</strong> a wonderful day with my family.
+        </p>
+      </div>
+
+      <!-- Activity 2 & 3: Comprehension & Grammar Detective -->
+      <h3 style="color:var(--gold); margin-bottom:12px;">🕵️ Activity 2 & 3: Verb Hunting & Grammar Detective</h3>
+      
+      <div class="lkpd-item">
+        <label><strong>1. When did the writer visit the grandmother?</strong></label>
+        <input type="text" id="lkpd-q1" class="form-control" style="margin-top:8px;" placeholder="Ketik jawabanmu dalam bahasa Inggris...">
+        <div id="lkpd-fb-1" class="feedback-banner"></div>
+      </div>
+
+      <div class="lkpd-item">
+        <label><strong>2. Where did the writer go?</strong></label>
+        <input type="text" id="lkpd-q2" class="form-control" style="margin-top:8px;" placeholder="Contoh: The writer went to...">
+        <div id="lkpd-fb-2" class="feedback-banner"></div>
+      </div>
+
+      <div class="lkpd-item">
+        <label><strong>3. What did they do together?</strong></label>
+        <input type="text" id="lkpd-q3" class="form-control" style="margin-top:8px;" placeholder="Sebutkan kegiatan yang mereka lakukan...">
+        <div id="lkpd-fb-3" class="feedback-banner"></div>
+      </div>
+
+      <div class="lkpd-item">
+        <label><strong>4. Verb Hunting: Find five (5) past verbs (V2) from the text!</strong> (Pisahkan dengan koma)</label>
+        <input type="text" id="lkpd-q4" class="form-control" style="margin-top:8px;" placeholder="Contoh: visited, went, ...">
+        <div id="lkpd-fb-4" class="feedback-banner"></div>
+      </div>
+
+      <!-- Activity 4 & 5: Writing Challenge -->
+      <h3 style="color:var(--gold); margin:20px 0 12px;">✍️ Activity 4 & 5: Sentence Construction & Writing Challenge</h3>
+      <div class="lkpd-item">
+        <label><strong>5. Write 3 to 5 sentences about your last holiday using Simple Past Tense!</strong></label>
+        <textarea id="lkpd-q5" class="form-control" style="margin-top:8px;" placeholder="Last holiday, I went to..."></textarea>
+        <div id="lkpd-fb-5" class="feedback-banner"></div>
+      </div>
+
+      <div class="no-print" style="display:flex; gap:12px; flex-wrap:wrap; margin-top:20px;">
+        <button class="btn btn-electric" onclick="checkLKPD()">🔍 CHECK ANSWER</button>
+        <button class="btn btn-outline" onclick="resetLKPD()">🔄 RESET</button>
+        <button class="btn btn-outline" onclick="window.print()">🖨️ CETAK / SIMPAN PDF</button>
+        <button class="btn btn-gold" onclick="finishLKPD()">✅ FINISH MISSION 03 (+1 Bintang)</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. MISSION 04: FINAL EVALUATION -->
+  <section id="screen-evaluation" class="screen">
+    <div class="panel">
+      <div class="section-header">
+        <div>
+          <span style="color:var(--gold); font-weight:700; font-size:0.85rem;">MISSION 04 • FINAL CHALLENGE</span>
+          <h2>Evaluasi Akhir (25 Soal)</h2>
+        </div>
+        <button class="btn btn-outline" onclick="goScreen('dashboard')">⬅ Kembali</button>
+      </div>
+
+      <!-- Intro Evaluation -->
+      <div id="eval-intro" style="text-align:center; padding:25px 10px;">
+        <div style="font-size:3.5rem; margin-bottom:10px;">🏆</div>
+        <h3 style="color:var(--gold); margin-bottom:10px;">Siap Menghadapi Ujian Portal Waktu?</h3>
+        <p style="max-width:600px; margin:0 auto 20px; color:var(--text-muted);">
+          Evaluasi ini terdiri dari <strong>25 soal</strong> (10 Pilihan Ganda, 5 Benar-Salah, 5 Melengkapi Kalimat, dan 5 Menyusun Kalimat). Nilai minimal ketuntasan (KKTP) adalah <strong>70</strong>.
+        </p>
+        <button class="btn btn-gold" onclick="startQuiz()">⚡ MULAI EVALUASI SEKARANG</button>
+      </div>
+
+      <!-- Active Quiz Container -->
+      <div id="eval-active" style="display:none;">
+        <div class="quiz-header">
+          <span style="font-weight:700; color:var(--gold);">Soal <span id="q-current">1</span> dari 25</span>
+          <span class="q-type-badge" id="q-type-label">Multiple Choice</span>
+        </div>
+
+        <div class="progress-bar-bg" style="margin-bottom:20px; height:8px;">
+          <div class="progress-bar-fill" id="quiz-progress-bar" style="width:4%;"></div>
+        </div>
+
+        <h3 id="q-text" style="margin-bottom:18px; font-size:1.15rem; line-height:1.6;">Pertanyaan...</h3>
+
+        <!-- Dynamic Input Area -->
+        <div id="q-input-area"></div>
+
+        <div style="display:flex; justify-content:space-between; margin-top:25px;">
+          <button class="btn btn-outline" id="btn-prev-q" onclick="prevQuestion()">⬅ Sebelumnya</button>
+          <button class="btn btn-electric" id="btn-next-q" onclick="nextQuestion()">Selanjutnya ➔</button>
+          <button class="btn btn-gold" id="btn-submit-q" style="display:none;" onclick="submitQuiz()">🏁 SELESAI & LIHAT NILAI</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. MISSION 05: ACHIEVEMENT ROOM -->
+  <section id="screen-achievement" class="screen">
+    <div class="panel">
+      <div class="section-header no-print">
+        <div>
+          <span style="color:var(--gold); font-weight:700; font-size:0.85rem;">MISSION 05 • ACHIEVEMENT ROOM</span>
+          <h2>Hasil Belajar & Penghargaan</h2>
+        </div>
+        <button class="btn btn-outline" onclick="goScreen('dashboard')">⬅ Kembali</button>
+      </div>
+
+      <div id="ach-empty" style="text-align:center; padding:30px;">
+        <p style="font-size:1.1rem; color:var(--text-muted); margin-bottom:15px;">Kamu belum menyelesaikan <strong>Mission 04 (Final Challenge)</strong>.</p>
+        <button class="btn btn-gold" onclick="goScreen('evaluation')">🚀 Kerjakan Evaluasi Sekarang</button>
+      </div>
+
+      <div id="ach-content" style="display:none;">
+        <div class="certificate-card">
+          <p style="letter-spacing:3px; color:var(--gold); font-weight:700; font-size:0.85rem;">CERTIFICATE OF TIME TRAVEL MASTERY</p>
+          <h2 style="font-size:1.8rem; margin:8px 0;">SMP NEGERI 2 PALAS</h2>
+          <p style="color:var(--text-muted);">Diberikan kepada:</p>
+          <h1 style="color:var(--gold); font-size:2.2rem; margin:5px 0;" id="cert-name">Nama Siswa</h1>
+          <p style="font-weight:700; margin-bottom:15px;" id="cert-class">Kelas IX</p>
+          
+          <div class="badge-display" id="cert-badge">🏆</div>
+          <h3 style="color:var(--success); font-size:1.5rem;" id="cert-title">PAST TENSE MASTER</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem;" id="cert-predicate">Predikat: Excellent</p>
+
+          <div class="stats-row">
+            <div class="stat-box">
+              <h4 id="res-score">0</h4>
+              <span>Nilai Akhir</span>
+            </div>
+            <div class="stat-box">
+              <h4 id="res-correct" style="color:var(--success);">0</h4>
+              <span>Jawaban Benar</span>
+            </div>
+            <div class="stat-box">
+              <h4 id="res-wrong" style="color:var(--danger);">0</h4>
+              <span>Jawaban Salah</span>
+            </div>
+            <div class="stat-box">
+              <h4 id="res-percent">0%</h4>
+              <span>Keberhasilan</span>
+            </div>
+          </div>
+          <p style="font-size:0.8rem; color:var(--text-muted); margin-top:10px;">
+            Guru Mata Pelajaran Bahasa Inggris: <strong>M. Herdiawan, M.Pd.</strong>
+          </p>
+        </div>
+
+        <div class="no-print" style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-bottom:25px;">
+          <button class="btn btn-gold" onclick="window.print()">🖨️ Cetak / Simpan Sertifikat</button>
+          <button class="btn btn-electric" onclick="toggleReview()">📋 Lihat Pembahasan Soal</button>
+          <button class="btn btn-outline" onclick="startQuiz(); goScreen('evaluation')">🔄 Ulangi Evaluasi</button>
+        </div>
+
+        <div id="review-container" style="display:none; margin-top:20px;">
+          <h3 style="color:var(--gold); margin-bottom:15px;">📝 Pembahasan & Analisis Jawaban</h3>
+          <div id="review-list"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9. DEVELOPER PROFILE -->
+  <section id="screen-developer" class="screen">
+    <div class="panel">
+      <div class="section-header">
+        <div>
+          <span style="color:var(--gold); font-weight:700; font-size:0.85rem;">ABOUT DEVELOPER</span>
+          <h2>Developer Profile</h2>
+        </div>
+        <button class="btn btn-outline" onclick="goBackFromDev()">⬅ Kembali</button>
+      </div>
+
+      <div class="dev-grid">
+        <div class="dev-avatar">
+          <span>👨‍🏫</span>
+          <span style="font-size:0.85rem; font-weight:700; color:var(--gold); margin-top:8px;">SMPN 2 PALAS</span>
+        </div>
+        <div>
+          <h2 style="color:var(--gold); margin-bottom:5px;">M. Herdiawan, M.Pd.</h2>
+          <p style="color:var(--electric); font-weight:700; margin-bottom:15px;">Guru Mata Pelajaran Bahasa Inggris • SMP Negeri 2 Palas</p>
+          
+          <table>
+            <tr><th style="width:180px;">Instansi</th><td>SMP Negeri 2 Palas</td></tr>
+            <tr><th>Mata Pelajaran</th><td>Bahasa Inggris</td></tr>
+            <tr><th>Sasaran Pengguna</th><td>Peserta Didik Kelas IX SMP/MTs</td></tr>
+            <tr><th>Produk MPI</th><td>TIME TRAVEL ADVENTURE: Mastering Simple Past Tense</td></tr>
+          </table>
+
+          <div class="formula-card" style="margin-top:15px;">
+            <h4 style="color:var(--gold); margin-bottom:5px;">Kata Pengantar & Tujuan Pengembangan</h4>
+            <p style="font-size:0.92rem; color:var(--text-muted);">
+              Media Pembelajaran Interaktif ini dirancang dengan pendekatan <em>Game-Based Learning</em> untuk membantu peserta didik kelas IX memahami dan mempraktikkan <strong>Simple Past Tense</strong> secara menyenangkan, interaktif, dan bermakna. Terima kasih kepada seluruh rekan guru dan peserta didik SMP Negeri 2 Palas atas dukungan dalam inovasi pembelajaran digital.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- MODAL HOW TO PLAY -->
+<div class="modal-overlay" id="modalHowTo">
+  <div class="modal-box">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+      <h3 style="color:var(--gold);">📖 Petunjuk Penggunaan (How to Play)</h3>
+      <button class="btn-icon" onclick="closeModal('modalHowTo')">✖</button>
+    </div>
+    <ol style="margin-left:20px; line-height:1.8; color:var(--text-muted);">
+      <li>Klik tombol <strong>START ADVENTURE</strong> pada halaman utama.</li>
+      <li>Isi <strong>Nama Lengkap</strong> dan <strong>Kelas</strong> untuk memulai petualangan.</li>
+      <li>Pada halaman <strong>Mission Control (Dashboard)</strong>, kerjakan 5 misi secara berurutan:
+        <ul style="margin-left:18px;">
+          <li><strong>Mission 01:</strong> Pelajari materi Simple Past Tense.</li>
+          <li><strong>Mission 02:</strong> Latih kemampuan di 4 ruang simulasi interaktif.</li>
+          <li><strong>Mission 03:</strong> Kerjakan LKPD Digital detektif waktu.</li>
+          <li><strong>Mission 04:</strong> Selesaikan 25 soal Evaluasi Akhir.</li>
+          <li><strong>Mission 05:</strong> Cek skor, pembahasan, dan cetak sertifikatmu!</li>
+        </ul>
+      </li>
+      <li>Kumpulkan hingga <strong>5 Bintang</strong> untuk meraih gelar <em>Past Tense Master</em>.</li>
+    </ol>
+    <div style="text-align:right; margin-top:20px;">
+      <button class="btn btn-gold" onclick="closeModal('modalHowTo')">Mengerti!</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // --- STATE MANAGEMENT ---
+  const state = {
+    studentName: '',
+    studentClass: 'IX A',
+    soundOn: true,
+    missions: { 1: false, 2: false, 3: false, 4: false, 5: false },
+    evalDone: false,
+    evalScore: 0,
+    evalCorrect: 0,
+    userAnswers: new Array(25).fill(null)
+  };
+
+  // --- WEB AUDIO SYNTHESIZER (OFFLINE SFX) ---
+  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  function playTone(freq, type, duration) {
+    if (!state.soundOn) return;
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+    gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + duration);
+  }
+  function playClick() { playTone(520, 'sine', 0.1); }
+  function playSuccess() {
+    playTone(523.25, 'triangle', 0.15);
+    setTimeout(() => playTone(659.25, 'triangle', 0.15), 100);
+    setTimeout(() => playTone(783.99, 'triangle', 0.25), 200);
+  }
+  function playError() {
+    playTone(220, 'sawtooth', 0.2);
+    setTimeout(() => playTone(180, 'sawtooth', 0.25), 150);
+  }
+
+  function toggleSound() {
+    state.soundOn = !state.soundOn;
+    document.getElementById('soundBtn').innerText = state.soundOn ? '🔊 SFX ON' : '🔇 SFX OFF';
+    document.getElementById('welcomeSoundBtn').innerText = state.soundOn ? '🔊 Suara: Aktif' : '🔇 Suara: Mati';
+    if (state.soundOn) playClick();
+  }
+
+  // --- NAVIGATION ---
+  function goScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('screen-' + id).classList.add('active');
+    const topBar = document.getElementById('topBar');
+    if (id === 'welcome' || id === 'identity') {
+      topBar.style.display = 'none';
+    } else {
+      topBar.style.display = 'flex';
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function goBackFromDev() {
+    if (state.studentName) goScreen('dashboard');
+    else goScreen('welcome');
+  }
+
+  function openModal(id) { document.getElementById(id).classList.add('open'); }
+  function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+  function startMission() {
+    const nameInput = document.getElementById('inputStudentName').value.trim();
+    const classInput = document.getElementById('inputStudentClass').value;
+    if (!nameInput) {
+      alert('Silakan masukkan nama lengkapmu terlebih dahulu!');
+      return;
+    }
+    state.studentName = nameInput;
+    state.studentClass = classInput;
+    document.getElementById('hudName').innerText = state.studentName;
+    document.getElementById('hudClass').innerText = state.studentClass;
+    document.getElementById('dashName').innerText = state.studentName;
+    playSuccess();
+    goScreen('dashboard');
+  }
+
+  function completeMission(num) {
+    if (!state.missions[num]) {
+      state.missions[num] = true;
+      playSuccess();
+    }
+    updateHUD();
+  }
+
+  function updateHUD() {
+    const doneCount = Object.values(state.missions).filter(Boolean).length;
+    const pct = doneCount * 20;
+    document.getElementById('hudStars').innerText = doneCount;
+    document.getElementById('hudProgress').innerText = pct + '%';
+    document.getElementById('dashProgressText').innerText = `${pct}% (${doneCount}/5 Misi)`;
+    document.getElementById('dashProgressBar').style.width = pct + '%';
+
+    for (let i = 1; i <= 5; i++) {
+      const card = document.getElementById('card-m' + i);
+      const badge = document.getElementById('badge-m' + i);
+      if (state.missions[i]) {
+        card.classList.add('completed');
+        badge.innerText = '✔ SELESAI';
+      }
+    }
+  }
+
+  // --- MISSION 01: MATERIALS TABS & MINI PRACTICE ---
+  function openMatTab(idx, btn) {
+    playClick();
+    document.querySelectorAll('#screen-materials .tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('#screen-materials .tab-content').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('mat-tab-' + idx).classList.add('active');
+  }
+
+  function checkMiniPractice(num, isCorrect, btn) {
+    const fb = document.getElementById('mp-fb-' + num);
+    if (isCorrect) {
+      playSuccess();
+      fb.className = 'feedback-banner ok';
+      fb.innerText = num === 1 
+        ? 'Correct! "Cooked" adalah bentuk Verb 2 (Regular Verb) karena waktunya yesterday morning.'
+        : 'Correct! Kalimat negatif Simple Past Tense menggunakan auxiliary "did + not + V1".';
+    } else {
+      playError();
+      fb.className = 'feedback-banner err';
+      fb.innerText = 'Try Again! Perhatikan penanda waktu lampau dan pola kalimat Simple Past Tense.';
+    }
+  }
+
+  // --- MISSION 02: SIMULATION LAB ---
+  function openSimTab(num, btn) {
+    playClick();
+    document.querySelectorAll('#screen-simulation .tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('#screen-simulation .tab-content').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('sim-tab-' + num).classList.add('active');
+  }
+
+  // Sim 1 Data
+  const sim1Data = [
+    { v1: 'GO', opts: ['Goed', 'Went', 'Gone', 'Going'], ans: 'Went', exp: 'Go adalah Irregular Verb, bentuk V2-nya adalah Went.' },
+    { v1: 'EAT', opts: ['Eated', 'Eaten', 'Ate', 'Eats'], ans: 'Ate', exp: 'Eat adalah Irregular Verb, bentuk V2-nya adalah Ate.' },
+    { v1: 'PLAY', opts: ['Played', 'Plaid', 'Playing', 'Plays'], ans: 'Played', exp: 'Play adalah Regular Verb, cukup tambahkan -ed menjadi Played.' },
+    { v1: 'STUDY', opts: ['Studyed', 'Studied', 'Studies', 'Studying'], ans: 'Studied', exp: 'Study berakhiran konsonan + y, maka y berubah menjadi i + ed (Studied).' }
+  ];
+  let s1Idx = 0;
+  function loadSim1() {
+    const d = sim1Data[s1Idx];
+    document.getElementById('s1-num').innerText = s1Idx + 1;
+    document.getElementById('s1-v1').innerText = d.v1;
+    const box = document.getElementById('s1-options');
+    box.innerHTML = '';
+    d.opts.forEach(opt => {
+      const b = document.createElement('button');
+      b.className = 'opt-btn';
+      b.innerText = opt;
+      b.onclick = () => {
+        const fb = document.getElementById('s1-feedback');
+        if (opt === d.ans) {
+          playSuccess();
+          fb.className = 'feedback-banner ok';
+          fb.innerText = 'Correct! ' + d.exp;
+          document.getElementById('s1-next').style.display = s1Idx < sim1Data.length - 1 ? 'inline-flex' : 'none';
+        } else {
+          playError();
+          fb.className = 'feedback-banner err';
+          fb.innerText = 'Try Again! Itu bukan bentuk Verb 2 yang tepat.';
+        }
+      };
+      box.appendChild(b);
+    });
+    document.getElementById('s1-feedback').className = 'feedback-banner';
+    document.getElementById('s1-next').style.display = 'none';
+  }
+  function nextSim1() { s1Idx = (s1Idx + 1) % sim1Data.length; loadSim1(); }
+
+  // Sim 2 Data (Sentence Builder)
+  const sim2Data = [
+    { words: ['yesterday', 'football', 'played', 'I'], ans: 'I played football yesterday' },
+    { words: ['to', 'went', 'We', 'last week', 'Bali'], ans: 'We went to Bali last week' },
+    { words: ['did', 'not', 'She', 'buy', 'a book'], ans: 'She did not buy a book' }
+  ];
+  let s2Idx = 0;
+  let s2Selected = [];
+  function loadSim2() {
+    s2Selected = [];
+    document.getElementById('s2-num').innerText = s2Idx + 1;
+    document.getElementById('s2-feedback').className = 'feedback-banner';
+    document.getElementById('s2-next').style.display = 'none';
+    renderSim2();
+  }
+  function renderSim2() {
+    const d = sim2Data[s2Idx];
+    const ansBox = document.getElementById('s2-answer');
+    const bankBox = document.getElementById('s2-bank');
+    ansBox.innerHTML = '';
+    bankBox.innerHTML = '';
+
+    s2Selected.forEach((word, i) => {
+      const chip = document.createElement('span');
+      chip.className = 'word-chip';
+      chip.style.background = 'var(--gold)';
+      chip.style.color = 'var(--navy)';
+      chip.innerText = word;
+      chip.onclick = () => { playClick(); s2Selected.splice(i, 1); renderSim2(); };
+      ansBox.appendChild(chip);
+    });
+
+    d.words.forEach(word => {
+      if (!s2Selected.includes(word)) {
+        const chip = document.createElement('span');
+        chip.className = 'word-chip';
+        chip.innerText = word;
+        chip.onclick = () => { playClick(); s2Selected.push(word); renderSim2(); };
+        bankBox.appendChild(chip);
+      }
+    });
+  }
+  function checkSim2() {
+    const userStr = s2Selected.join(' ');
+    const target = sim2Data[s2Idx].ans;
+    const fb = document.getElementById('s2-feedback');
+    if (userStr === target) {
+      playSuccess();
+      fb.className = 'feedback-banner ok';
+      fb.innerText = `Correct! Susunan kalimat tepat: "${target}."`;
+      document.getElementById('s2-next').style.display = s2Idx < sim2Data.length - 1 ? 'inline-flex' : 'none';
+    } else {
+      playError();
+      fb.className = 'feedback-banner err';
+      fb.innerText = 'Try Again! Ingat pola: Subject + Verb 2 + Object + Time Signal.';
+    }
+  }
+  function resetSim2() { playClick(); loadSim2(); }
+  function nextSim2() { s2Idx = (s2Idx + 1) % sim2Data.length; loadSim2(); }
+
+  // Sim 3 Data (Time Machine)
+  const sim3Data = [
+    {
+      present: '"I go to school every day."',
+      opts: ['I went to school yesterday.', 'I goed to school yesterday.', 'I goes to school yesterday.'],
+      ans: 'I went to school yesterday.',
+      exp: 'Kata kerja "go" berubah menjadi V2 "went", dan "every day" menjadi "yesterday".'
+    },
+    {
+      present: '"She writes a letter today."',
+      opts: ['She writed a letter last night.', 'She wrote a letter last night.', 'She writing a letter last night.'],
+      ans: 'She wrote a letter last night.',
+      exp: '"Write" adalah irregular verb, bentuk lampaunya adalah "wrote".'
+    },
+    {
+      present: '"They are happy now."',
+      opts: ['They was happy two days ago.', 'They did happy two days ago.', 'They were happy two days ago.'],
+      ans: 'They were happy two days ago.',
+      exp: 'Untuk kalimat nominal dengan subjek "They", to be lampau yang digunakan adalah "were".'
+    }
+  ];
+  let s3Idx = 0;
+  function loadSim3() {
+    const d = sim3Data[s3Idx];
+    document.getElementById('s3-num').innerText = s3Idx + 1;
+    document.getElementById('s3-present').innerText = d.present;
+    const box = document.getElementById('s3-options');
+    box.innerHTML = '';
+    d.opts.forEach(opt => {
+      const b = document.createElement('button');
+      b.className = 'quiz-opt';
+      b.innerText = opt;
+      b.onclick = () => {
+        const fb = document.getElementById('s3-feedback');
+        if (opt === d.ans) {
+          playSuccess();
+          fb.className = 'feedback-banner ok';
+          fb.innerText = 'Correct! ' + d.exp;
+          document.getElementById('s3-next').style.display = s3Idx < sim3Data.length - 1 ? 'inline-flex' : 'none';
+        } else {
+          playError();
+          fb.className = 'feedback-banner err';
+          fb.innerText = 'Try Again! Perhatikan perubahan kata kerja dan penanda waktunya.';
+        }
+      };
+      box.appendChild(b);
+    });
+    document.getElementById('s3-feedback').className = 'feedback-banner';
+    document.getElementById('s3-next').style.display = 'none';
+  }
+  function nextSim3() { s3Idx = (s3Idx + 1) % sim3Data.length; loadSim3(); }
+
+  // Sim 4 Data (Error Detective)
+  const sim4Data = [
+    {
+      wrong: '"She did not went to school yesterday."',
+      opts: ['She did not go to school yesterday.', 'She did not goes to school yesterday.', 'She was not went to school yesterday.'],
+      ans: 'She did not go to school yesterday.',
+      exp: 'Setelah "did not", kata kerja harus kembali ke bentuk dasar (Verb 1: go), bukan went.'
+    },
+    {
+      wrong: '"Did you visited your uncle last week?"',
+      opts: ['Did you visiting your uncle last week?', 'Did you visit your uncle last week?', 'Were you visit your uncle last week?'],
+      ans: 'Did you visit your uncle last week?',
+      exp: 'Pada kalimat tanya yang diawali "Did", gunakan Verb 1 (visit).'
+    },
+    {
+      wrong: '"We was at the library yesterday afternoon."',
+      opts: ['We did at the library yesterday afternoon.', 'We is at the library yesterday afternoon.', 'We were at the library yesterday afternoon.'],
+      ans: 'We were at the library yesterday afternoon.',
+      exp: 'Subjek jamak "We" berpasangan dengan "were", bukan "was".'
+    }
+  ];
+  let s4Idx = 0;
+  function loadSim4() {
+    const d = sim4Data[s4Idx];
+    document.getElementById('s4-num').innerText = s4Idx + 1;
+    document.getElementById('s4-wrong').innerText = d.wrong;
+    const box = document.getElementById('s4-options');
+    box.innerHTML = '';
+    d.opts.forEach(opt => {
+      const b = document.createElement('button');
+      b.className = 'quiz-opt';
+      b.innerText = opt;
+      b.onclick = () => {
+        const fb = document.getElementById('s4-feedback');
+        if (opt === d.ans) {
+          playSuccess();
+          fb.className = 'feedback-banner ok';
+          fb.innerText = 'Correct! ' + d.exp;
+          document.getElementById('s4-next').style.display = s4Idx < sim4Data.length - 1 ? 'inline-flex' : 'none';
+        } else {
+          playError();
+          fb.className = 'feedback-banner err';
+          fb.innerText = 'Try Again! Cek kembali aturan penggunaan Did dan Was/Were.';
+        }
+      };
+      box.appendChild(b);
+    });
+    document.getElementById('s4-feedback').className = 'feedback-banner';
+    document.getElementById('s4-next').style.display = 'none';
+  }
+  function nextSim4() { s4Idx = (s4Idx + 1) % sim4Data.length; loadSim4(); }
+
+  // Initialize Simulations
+  loadSim1(); loadSim2(); loadSim3(); loadSim4();
+
+  // --- MISSION 03: LKPD DIGITAL ---
+  function checkLKPD() {
+    const q1 = document.getElementById('lkpd-q1').value.toLowerCase();
+    const q2 = document.getElementById('lkpd-q2').value.toLowerCase();
+    const q3 = document.getElementById('lkpd-q3').value.toLowerCase();
+    const q4 = document.getElementById('lkpd-q4').value.toLowerCase();
+    const q5 = document.getElementById('lkpd-q5').value.trim();
+
+    const setFb = (id, ok, msg) => {
+      const el = document.getElementById('lkpd-fb-' + id);
+      el.className = 'feedback-banner ' + (ok ? 'ok' : 'err');
+      el.innerText = msg;
+    };
+
+    setFb(1, q1.includes('last week'), q1.includes('last week') ? '✔ Tepat! Penulis mengunjungi neneknya minggu lalu (last week).' : '✘ Petunjuk: Lihat kalimat pertama pada teks ("Last week...").');
+    setFb(2, q2.includes('grandmother') || q2.includes('house'), (q2.includes('grandmother') || q2.includes('house')) ? '✔ Tepat! Penulis pergi ke rumah neneknya (her house / grandmother\'s house).' : '✘ Petunjuk: Lihat kalimat kedua ("I went to her house...").');
+    setFb(3, q3.includes('cooked') || q3.includes('played') || q3.includes('watched'), (q3.includes('cooked') || q3.includes('played') || q3.includes('watched')) ? '✔ Tepat! Mereka memasak makanan tradisional, bermain game, dan menonton TV.' : '✘ Petunjuk: Sebutkan kegiatan pada kalimat ketiga (cooked, played, watched).');
+    
+    const verbs = ['visited', 'went', 'cooked', 'played', 'watched', 'was', 'spent'];
+    const found = verbs.filter(v => q4.includes(v));
+    setFb(4, found.length >= 5, found.length >= 5 ? `✔ Hebat! Kamu menemukan ${found.length} kata kerja lampau (${found.join(', ')}).` : `✘ Baru ditemukan ${found.length} kata kerja lampau. Cari minimal 5 dari teks!`);
+    
+    setFb(5, q5.length >= 25, q5.length >= 25 ? '✔ Bagus! Cerita pengalamanmu sudah terekam pada lembar kerja.' : '✘ Tuliskan minimal 3 kalimat lengkap tentang liburan terakhirmu.');
+    playClick();
+  }
+
+  function resetLKPD() {
+    playClick();
+    for (let i = 1; i <= 5; i++) {
+      document.getElementById('lkpd-q' + i).value = '';
+      document.getElementById('lkpd-fb-' + i).className = 'feedback-banner';
+    }
+  }
+
+  function finishLKPD() {
+    checkLKPD();
+    completeMission(3);
+    goScreen('dashboard');
+  }
+
+  // --- MISSION 04: 25 EVALUATION QUESTIONS ---
+  const quizQuestions = [
+    // 10 Multiple Choice (0-9)
+    { type: 'Multiple Choice', q: '1. We _____ to the zoo with our teacher last Sunday.', opts: ['go', 'went', 'gone', 'going'], ans: 'went', exp: 'Last Sunday menunjukkan masa lampau, sehingga menggunakan Verb 2 dari go yaitu "went".' },
+    { type: 'Multiple Choice', q: '2. My father _____ a new motorcycle two days ago.', opts: ['buy', 'buys', 'bought', 'buying'], ans: 'bought', exp: 'Verb 2 (irregular) dari buy adalah "bought".' },
+    { type: 'Multiple Choice', q: '3. Rina did not _____ her homework last night.', opts: ['finish', 'finished', 'finishing', 'finishes'], ans: 'finish', exp: 'Setelah "did not", kata kerja kembali ke bentuk dasar (Verb 1: finish).' },
+    { type: 'Multiple Choice', q: '4. _____ you watch the football match on TV yesterday?', opts: ['Do', 'Were', 'Was', 'Did'], ans: 'Did', exp: 'Kalimat tanya verbal (ada kata kerja "watch") pada Simple Past diawali dengan "Did".' },
+    { type: 'Multiple Choice', q: '5. The students _____ very happy during the school trip last month.', opts: ['was', 'were', 'did', 'are'], ans: 'were', exp: 'Subjek "The students" berbentuk jamak dan diikuti kata sifat "happy", sehingga memakai "were".' },
+    { type: 'Multiple Choice', q: '6. I _____ at home yesterday because I was sick.', opts: ['stayed', 'stay', 'staying', 'stays'], ans: 'stayed', exp: 'Regular verb "stay" ditambah akhiran -ed menjadi "stayed".' },
+    { type: 'Multiple Choice', q: '7. What is the past form (Verb 2) of the verb "WRITE"?', opts: ['Writed', 'Written', 'Wrote', 'Writes'], ans: 'Wrote', exp: 'Write adalah irregular verb dengan bentuk V2 "wrote".' },
+    { type: 'Multiple Choice', q: '8. Budi _____ late to school this morning.', opts: ['come', 'came', 'comes', 'coming'], ans: 'came', exp: 'This morning (tadi pagi) sudah berlalu, menggunakan V2 dari come yaitu "came".' },
+    { type: 'Multiple Choice', q: '9. _____ she at the library two hours ago?', opts: ['Did', 'Were', 'Was', 'Is'], ans: 'Was', exp: 'Kalimat nominal dengan subjek tunggal "she" menggunakan "Was".' },
+    { type: 'Multiple Choice', q: '10. They _____ traditional food at grandmother\'s house last week.', opts: ['cook', 'cooks', 'cooking', 'cooked'], ans: 'cooked', exp: 'Regular verb "cook" menjadi "cooked" untuk menceritakan kejadian minggu lalu.' },
+
+    // 5 True or False (10-14)
+    { type: 'True or False', q: '11. Pernyataan: "She did not went to the market yesterday." adalah kalimat yang BENAR secara tata bahasa.', opts: ['True (Benar)', 'False (Salah)'], ans: 'False (Salah)', exp: 'Salah, karena setelah "did not" seharusnya menggunakan V1 "go", bukan V2 "went".' },
+    { type: 'True or False', q: '12. Pernyataan: Simple Past Tense digunakan untuk menyatakan peristiwa yang terjadi dan selesai di masa lampau.', opts: ['True (Benar)', 'False (Salah)'], ans: 'True (Benar)', exp: 'Benar! Itu adalah fungsi utama dari Simple Past Tense.' },
+    { type: 'True or False', q: '13. Pernyataan: Bentuk Verb 2 dari kata kerja "SEE" adalah "SAW".', opts: ['True (Benar)', 'False (Salah)'], ans: 'True (Benar)', exp: 'Benar! See (V1) – Saw (V2) – Seen (V3).' },
+    { type: 'True or False', q: '14. Pernyataan: Kata keterangan waktu "tomorrow" dan "next week" adalah penanda waktu Simple Past Tense.', opts: ['True (Benar)', 'False (Salah)'], ans: 'False (Salah)', exp: 'Salah! Tomorrow dan next week adalah penanda waktu Future Tense (masa depan).' },
+    { type: 'True or False', q: '15. Pernyataan: Kalimat "We were tired after playing basketball." sudah menggunakan to be yang tepat.', opts: ['True (Benar)', 'False (Salah)'], ans: 'True (Benar)', exp: 'Benar! Subjek "We" berpasangan dengan "were" pada kalimat nominal lampau.' },
+
+    // 5 Fill in the Blanks (15-19)
+    { type: 'Fill in the Blanks', q: '16. Lengkapilah dengan V2 dari (visit): Last holiday, I _________ my uncle in Bandar Lampung.', ans: 'visited', exp: 'Regular verb "visit" ditambah -ed menjadi "visited".' },
+    { type: 'Fill in the Blanks', q: '17. Lengkapilah dengan V2 dari (eat): We _________ delicious sate yesterday evening.', ans: 'ate', exp: 'Irregular verb "eat" berubah menjadi "ate".' },
+    { type: 'Fill in the Blanks', q: '18. Lengkapilah dengan V2 dari (study): Siti _________ English hard for the exam last night.', ans: 'studied', exp: 'Kata kerja "study" berubah menjadi "studied".' },
+    { type: 'Fill in the Blanks', q: '19. Lengkapilah dengan auxiliary yang tepat: _________ they play badminton yesterday? (Ketik 1 kata)', ans: 'did', exp: 'Kalimat tanya verbal Simple Past diawali dengan "Did".' },
+    { type: 'Fill in the Blanks', q: '20. Lengkapilah dengan to be lampau (was/were): He _________ very happy when he won the game.', ans: 'was', exp: 'Subjek tunggal "He" menggunakan to be lampau "was".' },
+
+    // 5 Sentence Arrangement (20-24)
+    { type: 'Sentence Arrangement', q: '21. Susunlah kata berikut menjadi kalimat yang benar: [ visited – my grandmother – yesterday – I ]', opts: ['I visited my grandmother yesterday.', 'Yesterday visited I my grandmother.', 'My grandmother I visited yesterday.'], ans: 'I visited my grandmother yesterday.', exp: 'Pola S + V2 + O + Time Signal: I visited my grandmother yesterday.' },
+    { type: 'Sentence Arrangement', q: '22. Susunlah kata berikut menjadi kalimat negatif yang benar: [ did not – go – She – to school ]', opts: ['She go did not to school.', 'She did not go to school.', 'Did not she go to school.'], ans: 'She did not go to school.', exp: 'Pola negatif: S + did not + V1 + Complement.' },
+    { type: 'Sentence Arrangement', q: '23. Susunlah kata berikut menjadi kalimat tanya yang benar: [ buy – Did – a new bag – you – ? ]', opts: ['Did you buy a new bag?', 'You did buy a new bag?', 'Did buy you a new bag?'], ans: 'Did you buy a new bag?', exp: 'Pola interogatif: Did + S + V1 + O?' },
+    { type: 'Sentence Arrangement', q: '24. Susunlah kata berikut menjadi kalimat nominal yang benar: [ happy – were – They – last night ]', opts: ['They happy were last night.', 'Were they happy last night.', 'They were happy last night.'], ans: 'They were happy last night.', exp: 'Pola nominal: S + was/were + Adjective + Time Signal.' },
+    { type: 'Sentence Arrangement', q: '25. Susunlah kata berikut menjadi kalimat yang benar: [ watched – We – a movie – two days ago ]', opts: ['We watched a movie two days ago.', 'We a movie watched two days ago.', 'Two days ago watched we a movie.'], ans: 'We watched a movie two days ago.', exp: 'Pola S + V2 + O + Time Signal: We watched a movie two days ago.' }
+  ];
+
+  let currentQIdx = 0;
+
+  function startQuiz() {
+    playClick();
+    currentQIdx = 0;
+    state.userAnswers = new Array(quizQuestions.length).fill(null);
+    document.getElementById('eval-intro').style.display = 'none';
+    document.getElementById('eval-active').style.display = 'block';
+    renderQuestion();
+  }
+
+  function renderQuestion() {
+    const qObj = quizQuestions[currentQIdx];
+    document.getElementById('q-current').innerText = currentQIdx + 1;
+    document.getElementById('q-type-label').innerText = qObj.type;
+    document.getElementById('q-text').innerText = qObj.q;
+    document.getElementById('quiz-progress-bar').style.width = (((currentQIdx + 1) / quizQuestions.length) * 100) + '%';
+
+    const area = document.getElementById('q-input-area');
+    area.innerHTML = '';
+
+    if (qObj.type === 'Fill in the Blanks') {
+      const inp = document.createElement('input');
+      inp.type = 'text';
+      inp.className = 'form-control';
+      inp.placeholder = 'Ketik jawabanmu di sini...';
+      inp.value = state.userAnswers[currentQIdx] || '';
+      inp.oninput = (e) => { state.userAnswers[currentQIdx] = e.target.value; };
+      area.appendChild(inp);
+    } else {
+      qObj.opts.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = 'quiz-opt' + (state.userAnswers[currentQIdx] === opt ? ' selected' : '');
+        btn.innerText = opt;
+        btn.onclick = () => {
+          playClick();
+          state.userAnswers[currentQIdx] = opt;
+          renderQuestion();
+        };
+        area.appendChild(btn);
+      });
+    }
+
+    document.getElementById('btn-prev-q').style.visibility = currentQIdx === 0 ? 'hidden' : 'visible';
+    if (currentQIdx === quizQuestions.length - 1) {
+      document.getElementById('btn-next-q').style.display = 'none';
+      document.getElementById('btn-submit-q').style.display = 'inline-flex';
+    } else {
+      document.getElementById('btn-next-q').style.display = 'inline-flex';
+      document.getElementById('btn-submit-q').style.display = 'none';
+    }
+  }
+
+  function prevQuestion() {
+    if (currentQIdx > 0) { playClick(); currentQIdx--; renderQuestion(); }
+  }
+
+  function nextQuestion() {
+    if (currentQIdx < quizQuestions.length - 1) { playClick(); currentQIdx++; renderQuestion(); }
+  }
+
+  function submitQuiz() {
+    const unanswered = state.userAnswers.filter(a => !a || a.trim() === '').length;
+    if (unanswered > 0) {
+      if (!confirm(`Masih ada ${unanswered} soal yang belum dijawab. Yakin ingin menyelesaikan evaluasi sekarang?`)) {
+        return;
+      }
+    }
+
+    let correctCount = 0;
+    const reviewList = document.getElementById('review-list');
+    reviewList.innerHTML = '';
+
+    quizQuestions.forEach((qObj, idx) => {
+      const uAns = (state.userAnswers[idx] || '').trim();
+      const isCorrect = uAns.toLowerCase() === qObj.ans.toLowerCase();
+      if (isCorrect) correctCount++;
+
+      const item = document.createElement('div');
+      item.className = 'lkpd-item';
+      item.style.borderLeft = isCorrect ? '4px solid var(--success)' : '4px solid var(--danger)';
+      item.innerHTML = `
+        <p style="font-weight:700; margin-bottom:5px;">${qObj.q}</p>
+        <p style="font-size:0.9rem;">Jawabanmu: <strong style="color:${isCorrect ? 'var(--success)' : 'var(--danger)'};">${uAns || '(Kosong)'}</strong> ${isCorrect ? '✔' : '✘'}</p>
+        ${!isCorrect ? `<p style="font-size:0.9rem;">Kunci Jawaban: <strong style="color:var(--gold);">${qObj.ans}</strong></p>` : ''}
+        <p style="font-size:0.85rem; color:var(--text-muted); margin-top:5px;">💡 <em>Pembahasan: ${qObj.exp}</em></p>
+      `;
+      reviewList.appendChild(item);
+    });
+
+    const finalScore = Math.round((correctCount / quizQuestions.length) * 100);
+    state.evalDone = true;
+    state.evalScore = finalScore;
+    state.evalCorrect = correctCount;
+
+    completeMission(4);
+    completeMission(5);
+    renderAchievement();
+    goScreen('achievement');
+  }
+
+  // --- MISSION 05: ACHIEVEMENT ROOM ---
+  function renderAchievement() {
+    if (!state.evalDone) return;
+    document.getElementById('ach-empty').style.display = 'none';
+    document.getElementById('ach-content').style.display = 'block';
+
+    document.getElementById('cert-name').innerText = state.studentName;
+    document.getElementById('cert-class').innerText = 'Kelas ' + state.studentClass;
+    document.getElementById('res-score').innerText = state.evalScore;
+    document.getElementById('res-correct').innerText = state.evalCorrect;
+    document.getElementById('res-wrong').innerText = quizQuestions.length - state.evalCorrect;
+    document.getElementById('res-percent').innerText = state.evalScore + '%';
+
+    let badge = '🧭', title = 'Young Time Traveler', pred = 'Keep Practicing (Belum Tuntas KKTP 70)';
+    if (state.evalScore >= 90) {
+      badge = '👑'; title = 'PAST TENSE MASTER'; pred = 'Predikat: Excellent (Tuntas KKTP)';
+    } else if (state.evalScore >= 80) {
+      badge = '🚀'; title = 'TIME TRAVELER EXPERT'; pred = 'Predikat: Very Good (Tuntas KKTP)';
+    } else if (state.evalScore >= 70) {
+      badge = '🛡️'; title = 'GRAMMAR EXPLORER'; pred = 'Predikat: Good (Tuntas KKTP)';
+    }
+
+    document.getElementById('cert-badge').innerText = badge;
+    document.getElementById('cert-title').innerText = title;
+    document.getElementById('cert-predicate').innerText = pred;
+  }
+
+  function toggleReview() {
+    playClick();
+    const rev = document.getElementById('review-container');
+    rev.style.display = rev.style.display === 'none' ? 'block' : 'none';
+  }
+</script>
+</body>
+</html>
